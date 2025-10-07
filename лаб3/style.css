@@ -1,0 +1,143 @@
+nav {
+    flex: 1 1 100%;
+    order: 3;
+    flex-direction: column;
+}
+
+    nav ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    nav li a {
+        display: block;
+        flex: 1;
+        text-align: center;
+    }
+
+a {
+    text-decoration: none;
+}
+
+#header-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px;
+}
+
+logo {
+    flex: 0 0 auto;
+}
+
+    logo img {
+        width: 100px;
+        height: 100px;
+    }
+
+header {
+    flex: 1;
+}
+
+    header h1 {
+        margin: 20px;
+        overflow: hidden;
+    }
+
+@media screen and (min-width: 1000px) {
+    #header-wrapper {
+        flex-wrap: wrap;
+        position: relative;
+        align-items: flex-start;
+    }
+
+    nav {
+        order: 2;
+        flex: 0 0 auto;
+        padding: 5px;
+        display: flex;
+        justify-content: flex-end;
+        margin-left: auto;
+        max-width: none;
+        height: auto;
+        min-height: 0;
+    }
+
+        nav ul {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        nav li {
+            display: inline;
+        }
+
+            nav li a {
+                display: inline-block;
+                padding: 3px 8px;
+            }
+
+    header {
+        order: 3;
+        flex: 1 1 100%;
+    }
+
+    logo {
+        order: 1;
+        flex: 0 0 auto;
+    }
+}
+
+h2 {
+    text-align: center;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #cc377d;
+}
+
+tr:nth-child(even) {
+    background-color: lightpink;
+}
+
+tr:hover {
+    background-color: #cc377d;
+}
+
+.card {
+    background-color: white;
+    border: solid;
+}
+
+.btn {
+    padding: 10px 40px;
+    line-height: 30px;
+    font-size: 15px;
+    border: 1px solid #cc377d;
+    color: black;
+    background-color: lightpink;
+}
+
+    .btn:hover {
+        background-color: #cc377d;
+        color: white;
+    }
+
+.my-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}

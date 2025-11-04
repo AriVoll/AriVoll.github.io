@@ -1,0 +1,129 @@
+body {
+    margin: 20px auto;
+    padding: 10px;
+    background-color: lightpink;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #d696c1;
+}
+.gallery-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.gallery {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.gallery-track {
+    display: flex;
+}
+.gallery-item {
+    flex: 0 0 33.333%;
+    padding: 5px;
+    box-sizing: border-box;
+    min-width: 33.333%;
+}
+.gallery-item img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+}
+.gallery-nav {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+.nav-btn {
+    background-color: #cc377d;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+}
+.nav-btn:hover {
+    background-color: lightpink;
+    color: black;
+}
+.gallery-pager {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    gap: 15px;
+}
+.pager-dots {
+    display: flex;
+    gap: 8px;
+}
+.pager-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ddd;
+    cursor: pointer;
+}
+    .pager-dot.active {
+        background-color: #cc377d;
+    }
+.pager-text {
+    font-size: 14px;
+    color: #850859;
+    font-weight: bold;
+    min-width: 120px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    body {
+        margin: 10px auto;
+        padding: 5px;
+    }
+    .gallery-container {
+        padding: 15px;
+    }
+    .gallery-item {
+        flex: 0 0 100%;
+        min-width: 100%;
+        padding: 3px;
+    }
+    .gallery-item img {
+        height: 300px;
+    }
+    .gallery-pager {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .pager-text {
+        order: -1;
+    }
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .gallery-item img {
+        height: 400px;
+    }
+}

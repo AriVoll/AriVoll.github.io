@@ -1,0 +1,82 @@
+#header-wrapper {
+    background-color: lightpink;
+}
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+nav li a {
+    display: block;
+    flex: 1;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+header h1 {
+    margin: 20px;
+    overflow: hidden;
+}
+
+h2 {
+    margin: 10px 20px;
+    text-align: center;
+}
+.my-btn {
+    padding: 10px 40px;
+    line-height: 30px;
+    font-size: 15px;
+    border: 1px solid #cc377d;
+    color: black;
+    background-color: lightpink;
+}
+.my-btn:hover {
+    background-color: #cc377d;
+    color: white;
+}
+
+#content-wrapper {
+    background-color: lightpink;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+thead {
+    background-color: #cc377d;
+}
+tr:nth-child(even) { background-color: lightpink; }
+tr:hover { background-color: #cc377d; }
+.my-card {
+    background-color: white;
+    border: solid;
+}
+.my-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#footer-wrapper {
+    background-color: lightpink;
+}
+
+footer {
+    font-size: 20px;
+}
+
+
+
+
+

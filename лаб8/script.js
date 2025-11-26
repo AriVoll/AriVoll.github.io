@@ -1,5 +1,5 @@
 // Конфигурация
-const FORM_ENDPOINT = 'https://formcarry.com/s/uRmwFwjLNhL'; 
+const FORM_ENDPOINT = 'https://formcarry.com/s/8zeMtIS2ZwG'; 
 const STORAGE_KEY = 'feedback_form_data';
 
 // Элементы DOM

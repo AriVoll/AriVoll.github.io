@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey,Doll - создание кукол по фотографии</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Uncial+Antiqua&family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Основные стили и сброс */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --burgundy: #671615;
+            --dark-burgundy: #4a100f;
+            --light-burgundy: #8d1e1c;
+            --beige: #CBC2BB;
+            --light-beige: #e8e4e0;
+            --dark-beige: #b0a9a2;
+            --cream: #f5f1ed;
+            --white: #ffffff;
+            --text-dark: #2a1e1c;
+            --shadow: 0 6px 15px rgba(103, 22, 21, 0.15);
+            --gradient-burgundy: linear-gradient(135deg, #671615, #8d1e1c);
+            --gradient-beige: linear-gradient(135deg, #CBC2BB, #e8e4e0);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--cream);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 70px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.3rem;
+            color: var(--burgundy);
+            position: relative;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: var(--gradient-burgundy);
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--gradient-burgundy);
+            color: var(--cream);
+            padding: 14px 32px;
+            border-radius: 35px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(103, 22, 21, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #4a100f, #671615);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(103, 22, 21, 0.4);
+        }
+
+        /* Header и навигация */
+        header {
+            background: var(--gradient-burgundy);
+            box-shadow: 0 4px 15px rgba(103, 22, 21, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 2.2rem;
+            color: var(--cream);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: var(--beige);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-menu ul {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: var(--cream);
+            transition: all 0.3s;
+            position: relative;
+            padding: 8px 0;
+            font-size: 1.05rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link:hover {
+            color: var(--beige);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--beige);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--gradient-burgundy);
+            min-width: 200px;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+            overflow: hidden;
+            border: 1px solid rgba(203, 194, 187, 0.1);
+        }
+
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-content li {
+            padding: 0;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 14px 18px;
+            color: var(--cream);
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(203, 194, 187, 0.1);
+            font-weight: 500;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--beige);
+            color: var(--burgundy);
+            padding-left: 22px;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .burger-menu {
+            display: none;
+            font-size: 1.7rem;
+            color: var(--cream);
+            cursor: pointer;
+            transition: color 0.3s;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .burger-menu:hover {
+            color: var(--beige);
+        }
+
+        /* Шапка */
+        .hero {
+            background: linear-gradient(135deg, rgba(103, 22, 21, 0.85), rgba(141, 30, 28, 0.8)), url('https://images.unsplash.com/photo-1603083051752-8e5ce0c42df0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            color: var(--cream);
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: var(--cream);
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-title span {
+            color: var(--beige);
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 35px;
+            margin-top: 50px;
+        }
+
+        .feature {
+            background: rgba(245, 241, 237, 0.95);
+            padding: 30px 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            width: 240px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            color: var(--text-dark);
+        }
+
+        .feature:hover {
+            transform: translateY(-15px) scale(1.03);
+            border-color: var(--burgundy);
+            box-shadow: 0 15px 25px rgba(103, 22, 21, 0.2);
+        }
+
+        .feature i {
+            font-size: 3rem;
+            background: var(--gradient-burgundy);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .feature h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: var(--burgundy);
+        }
+
+        .feature p {
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* Наша деятельность */
+        .activity {
+            background-color: var(--light-beige);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-burgundy);
+        }
+
+        .activity-content {
+            max-width: 850px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .activity-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            background: var(--cream);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--burgundy);
+        }
+
+        .activity-text p {
+            margin-bottom: 25px;
+        }
+
+        /* Ассортимент */
+        .tariffs {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            flex-wrap: wrap;
+        }
+
+        .tariff {
+            background: var(--cream);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 35px 30px;
+            width: 320px;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+            overflow: hidden;
+        }
+
+        .tariff::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-burgundy);
+        }
+
+        .tariff:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(103, 22, 21, 0.2);
+            border-color: var(--beige);
+        }
+
+        .tariff h3 {
+            color: var(--burgundy);
+            margin-bottom: 20px;
+            font-size: 1.7rem;
+        }
+
+        .tariff-price {
+            font-size: 2.3rem;
+            color: var(--light-burgundy);
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .tariff ul {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .tariff li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .tariff li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--burgundy);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .tariff-btn {
+            display: none;
+            background: var(--gradient-burgundy);
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(103, 22, 21, 0.3);
+        }
+
+        .tariff-btn:hover {
+            background: linear-gradient(135deg, #4a100f, #671615);
+        }
+
+        .tariff:hover .tariff-btn {
+            display: inline-block;
+        }
+
+        /* Наши работы */
+        .works {
+            background: linear-gradient(to bottom, var(--light-beige), var(--cream));
+            position: relative;
+        }
+
+        .works::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-burgundy);
+        }
+
+        .works-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .work-item {
+            width: 200px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .work-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+        }
+
+        .work-img:hover {
+            transform: scale(1.08) rotate(2deg);
+            border-color: var(--burgundy);
+            box-shadow: 0 10px 20px rgba(103, 22, 21, 0.2);
+        }
+
+        .work-author {
+            font-weight: 700;
+            color: var(--burgundy);
+            font-size: 1.1rem;
+        }
+
+        /* Отзывы */
+        .reviews-container {
+            position: relative;
+            max-width: 850px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .reviews-slider {
+            display: flex;
+            transition: transform 0.6s ease;
+        }
+
+        .review {
+            min-width: 100%;
+            background: var(--cream);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            border-left: 5px solid var(--burgundy);
+        }
+
+        .review::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 5rem;
+            color: var(--beige);
+            font-family: 'Dancing Script', cursive;
+            opacity: 0.7;
+        }
+
+        .review-text {
+            font-style: italic;
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+        }
+
+        .review-author {
+            font-weight: 700;
+            color: var(--burgundy);
+            font-size: 1.2rem;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--gradient-burgundy);
+            color: var(--cream);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .slider-btn:hover {
+            background: linear-gradient(135deg, #4a100f, #671615);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slider-prev {
+            left: -60px;
+        }
+
+        .slider-next {
+            right: -60px;
+        }
+
+        /* Контакты */
+        .contacts {
+            background: linear-gradient(135deg, var(--light-beige), var(--beige));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contacts::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-burgundy);
+        }
+
+        .contacts-container {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .contacts-info {
+            flex: 1;
+            background: var(--cream);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border-right: 5px solid var(--burgundy);
+        }
+
+        .contacts-title {
+            font-size: 2rem;
+            color: var(--burgundy);
+            margin-bottom: 25px;
+        }
+
+        .contacts-details {
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--dark-beige);
+        }
+
+        .contact-item i {
+            background: var(--gradient-burgundy);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        .contact-form {
+            flex: 1;
+            background: var(--cream);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--beige);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--burgundy);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid var(--dark-beige);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: var(--light-beige);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--burgundy);
+            background: var(--cream);
+            box-shadow: 0 0 0 3px rgba(103, 22, 21, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--gradient-burgundy);
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 6px 15px rgba(103, 22, 21, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #4a100f, #671615);
+        }
+
+        .form-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            font-weight: 600;
+        }
+
+        .success {
+            background-color: #e8f4e8;
+            color: #2d5a2d;
+            border: 2px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8e8e8;
+            color: #7a2d2d;
+            border: 2px solid #f5c6cb;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gradient-burgundy);
+            color: var(--cream);
+            padding: 40px 0 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-beige);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-logo {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 1.8rem;
+            color: var(--cream);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .footer-links a {
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover {
+            color: var(--beige);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            width: 100%;
+            font-size: 0.95rem;
+            color: rgba(245, 241, 237, 0.85);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                max-width: 960px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .contacts-container {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .slider-prev {
+                left: 15px;
+            }
+            
+            .slider-next {
+                right: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 720px;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 85%;
+                height: 100vh;
+                background: var(--gradient-burgundy);
+                flex-direction: column;
+                justify-content: flex-start;
+                padding-top: 100px;
+                transition: left 0.5s ease;
+                z-index: 999;
+                box-shadow: 3px 0 15px rgba(103, 22, 21, 0.2);
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu ul {
+                flex-direction: column;
+                width: 100%;
+                padding: 0 25px;
+                gap: 0;
+            }
+            
+            .nav-menu li {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .nav-link {
+                display: block;
+                padding: 18px 15px;
+                border-bottom: 1px solid rgba(203, 194, 187, 0.1);
+                font-size: 1.1rem;
+            }
+            
+            .dropdown-content {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                margin-left: 15px;
+                display: none;
+                background: rgba(203, 194, 187, 0.1);
+                border-radius: 5px;
+                margin-top: 5px;
+                margin-bottom: 10px;
+            }
+            
+            .dropdown.active .dropdown-content {
+                display: block;
+            }
+            
+            .burger-menu {
+                display: block;
+                z-index: 1001;
+            }
+            
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .section {
+                padding: 50px 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .feature {
+                width: 100%;
+                max-width: 320px;
+            }
+            
+            .tariff {
+                width: 100%;
+                max-width: 380px;
+            }
+            
+            .tariff-btn {
+                display: inline-block;
+                margin-top: 15px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 25px;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            
+            .activity-text, .contacts-info, .contact-form {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                max-width: 100%;
+                padding: 0 20px;
+            }
+            
+            .section {
+                padding: 40px 0;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero {
+                padding: 70px 0;
+            }
+            
+            .hero-title {
+                font-size: 1.9rem;
+            }
+            
+            .work-item {
+                width: 170px;
+            }
+            
+            .work-img {
+                height: 190px;
+            }
+            
+            .review {
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                font-size: 1.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">Hey,<span>Doll</span></a>
+            <div class="burger-menu" id="burgerMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <ul>
+                    <li><a href="#hero" class="nav-link">Разработка</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link">Модель тела <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-content">
+                            <li><a href="#">Monster high G1</a></li>
+                            <li><a href="#">Monster high G2</a></li>
+                            <li><a href="#">Bratz</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link">Информация о компании <i class="fas fa-chevron-down"></i></a>
+                        <ul class="dropdown-content">
+                            <li><a href="#activity">Наша деятельность</a></li>
+                            <li><a href="#works">Наши работы</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#tariffs" class="nav-link">Ассортимент</a></li>
+                    <li><a href="#reviews" class="nav-link">Отзывы</a></li>
+                    <li><a href="#contacts" class="nav-link">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Шапка -->
+    <section class="hero section" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Шедевры кукольного искусства <br><span>по вашей фотографии</span></h1>
+                <p style="font-size: 1.3rem; max-width: 800px; margin-bottom: 25px; font-weight: 600;">Мы создаем эксклюзивные куклы, которые станут самым дорогим подарком для вас и ваших близких. Каждая деталь прорабатывается вручную для безупречного сходства с оригиналом.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-palette"></i>
+                        <h3>Индивидуальный дизайн</h3>
+                        <p>Уникальные куклы по вашим фотографиям и пожеланиям</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user-check"></i>
+                        <h3>Максимальное сходство</h3>
+                        <p>Фотографическая точность в каждой черте лица</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-gem"></i>
+                        <h3>Элитные материалы</h3>
+                        <p>Только качественные ткани, краски и аксессуары</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-globe-europe"></i>
+                        <h3>Доставка по всему миру</h3>
+                        <p>Бережная упаковка и быстрая доставка в любую страну</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Наша деятельность -->
+    <section class="activity section" id="activity">
+        <div class="container">
+            <h2 class="section-title">Наша деятельность</h2>
+            <div class="activity-content">
+                <div class="activity-text">
+                    <p>Компания <strong style="color: var(--burgundy);">Hey,Doll</strong> создает эксклюзивные куклы ручной работы по фотографии заказчика. Мы превращаем ваши самые дорогие воспоминания и образы в уникальные произведения искусства, которые станут идеальным подарком для вас и ваших близких.</p>
+                    <p>Наши опытные мастера создают кукол, невероятно похожих на человека с фотографии. Мы уделяем внимание каждой детали: от цвета глаз и волос до мельчайших черт лица и особенностей стиля. Каждая кукла проходит несколько этапов контроля качества.</p>
+                    <p>Используя только высококачественные материалы, мы гарантируем долговечность и эстетическую привлекательность каждой работы. Мы создаем не просто игрушку, а персонализированный сувенир, который сохранит память о важных моментах жизни на долгие годы.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ассортимент -->
+    <section class="tariffs section" id="tariffs">
+        <div class="container">
+            <h2 class="section-title">Наш ассортимент</h2>
+            <div class="tariffs">
+                <div class="tariff">
+                    <h3>Кукла по фотографии</h3>
+                    <div class="tariff-price">от 14 990 ₽</div>
+                    <ul>
+                        <li>Эксклюзивный дизайн по вашей фотографии</li>
+                        <li>Выбор модели тела (Bratz, Monster High)</li>
+                        <li>Детальная проработка черт лица и прически</li>
+                        <li>Создание уникального наряда по описанию</li>
+                        <li>Срок изготовления: 3-4 недели</li>
+                    </ul>
+                    <a href="#contacts" class="btn tariff-btn">Связаться с нами</a>
+                </div>
+                <div class="tariff">
+                    <h3>Кукла + Дизайнерская коробка</h3>
+                    <div class="tariff-price">от 18 990 ₽</div>
+                    <ul>
+                        <li>Все опции базового ассортимента</li>
+                        <li>Элитная подарочная коробка ручной работы</li>
+                        <li>Именная табличка с серебряной гравировкой</li>
+                        <li>Подарочный сертификат в бархатном конверте</li>
+                        <li>Срок изготовления: 4-5 недели</li>
+                    </ul>
+                    <a href="#contacts" class="btn tariff-btn">Связаться с нами</a>
+                </div>
+                <div class="tariff">
+                    <h3>Кукла + Коробка + Дневник-биография</h3>
+                    <div class="tariff-price">от 24 990 ₽</div>
+                    <ul>
+                        <li>Все опции расширенного ассортимента</li>
+                        <li>Дневник-биография куклы в кожаном переплете</li>
+                        <li>Профессиональная фотосессия куклы (8 фото)</li>
+                        <li>Сертификат подлинности в позолоченной рамке</li>
+                        <li>Срок изготовления: 5-6 недели</li>
+                    </ul>
+                    <a href="#contacts" class="btn tariff-btn">Связаться с нами</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Наши работы -->
+    <section class="works section" id="works">
+        <div class="container">
+            <h2 class="section-title">Наши работы</h2>
+            <div class="works-gallery">
+                <div class="work-item">
+                    <img src="media/doll1.jpg" alt="" class="work-img">
+                    <p class="work-author">Мастер: Алиса </p>
+                </div>
+                <div class="work-item">
+                    <img src="media/doll2.jpg" alt="" class="work-img">
+                    <p class="work-author">Мастер: Виктория</p>
+                </div>
+                <div class="work-item">
+                    <img src="media/doll3.jpg" alt="" class="work-img">
+                    <p class="work-author">Мастер: Марта </p>
+                </div>
+                <div class="work-item">
+                    <img src="media/doll4.jpg "alt="" class="work-img">
+                    <p class="work-author">Мастер: Марго</p>
+                </div>
+                <div class="work-item">
+                    <img src="media/doll5.jpg" alt="" class="work-img">
+                    <p class="work-author">Мастер: Крис</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section class="reviews section" id="reviews">
+        <div class="container">
+            <h2 class="section-title">Отзывы наших клиентов</h2>
+            <div class="reviews-container">
+                <button class="slider-btn slider-prev" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="reviews-slider" id="reviewsSlider">
+                    <div class="review">
+                        <p class="review-text">Заказала куклу в подарок сестре на юбилей. Результат превзошел все ожидания! Кукла получилась настолько похожей, что все гости были в восторге. Качество исполнения безупречное, каждая деталь проработана. Спасибо мастерам Hey,Doll за такой шедевр!</p>
+                        <p class="review-author">— Анна, Москва</p>
+                    </div>
+                    <div class="review">
+                        <p class="review-text">Подарил куклу жене на годовщину свадьбы. Она была тронута до слез! Мастера смогли передать не только внешнее сходство, но и характер. Кукла выглядит как живая. Очень доволен работой компании, обязательно закажу еще для дочери.</p>
+                        <p class="review-author">— Дмитрий, Санкт-Петербург</p>
+                    </div>
+                    <div class="review">
+                        <p class="review-text">Заказывала куклу по фото бабушки для мамы. Это был самый эмоциональный подарок в ее жизни! Мама плакала от счастья, увидев миниатюрную копию своей мамы. Работа выполнена ювелирно, видно, что вложена душа. Благодарю за ваше мастерство!</p>
+                        <p class="review-author">— Екатерина, Екатеринбург</p>
+                    </div>
+                    <div class="review">
+                        <p class="review-text">Заказал куклу для своей невесты в подарок на помолвку. Она была в полном восторге! Сходство просто потрясающее, кажется, будто миниатюрная копия невесты смотрит на нас. Качество материалов на высшем уровне. Спасибо команде Hey,Doll!</p>
+                        <p class="review-author">— Алексей, Казань</p>
+                    </div>
+                </div>
+                <button class="slider-btn slider-next" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="contacts section" id="contacts">
+        <div class="container">
+            <h2 class="section-title">Контакты</h2>
+            <div class="contacts-container">
+                <div class="contacts-info">
+                    <h3 class="contacts-title">Оставить заявку на создание вашей индивидуальной куклы</h3>
+                    <p style="font-size: 1.05rem; line-height: 1.7;">Свяжитесь с нами, чтобы обсудить детали вашей будущей куклы. Мы ответим на все вопросы и поможем сделать идеальный подарок, который запомнится на всю жизнь.</p>
+                    
+                    <div class="contacts-details">
+                        <div class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <span style="font-size: 1.1rem; font-weight: 600;">+7 (999) 543-21-00</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span style="font-size: 1.1rem; font-weight: 600;">order@heydoll.ru</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Санкт-Петербург, ул. Кукольная, д. 22</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Ежедневно: 10:00-20:00 (без выходных)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Имя *</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон *</label>
+                            <input type="tel" id="phone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Почта *</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Комментарий (описание куклы, пожелания)</label>
+                            <textarea id="comment" class="form-control" placeholder="Опишите, какую куклу вы хотели бы заказать, укажите особенности..."></textarea>
+                        </div>
+                        <button type="submit" class="btn submit-btn">Свяжитесь с нами</button>
+                        <div class="form-message" id="formMessage"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Hey,Doll</div>
+                <div class="footer-links">
+                    <a href="#activity">О нас</a>
+                    <a href="#tariffs">Ассортимент</a>
+                    <a href="#works">Работы</a>
+                    <a href="#reviews">Отзывы</a>
+                    <a href="#contacts">Контакты</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Hey,Doll. Арина Волошина. Итоговый проект.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Мобильное меню
+            const burgerMenu = document.getElementById('burgerMenu');
+            const navMenu = document.getElementById('navMenu');
+            
+            burgerMenu.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                burgerMenu.innerHTML = navMenu.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Выпадающие меню на мобильных устройствах
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            if (window.innerWidth <= 768) {
+                dropdowns.forEach(dropdown => {
+                    const link = dropdown.querySelector('.nav-link');
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropdown.classList.toggle('active');
+                        
+                        // Закрытие других открытых dropdown
+                        dropdowns.forEach(otherDropdown => {
+                            if (otherDropdown !== dropdown && otherDropdown.classList.contains('active')) {
+                                otherDropdown.classList.remove('active');
+                            }
+                        });
+                    });
+                });
+                
+                // Закрытие dropdown при клике вне их
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.dropdown')) {
+                        dropdowns.forEach(dropdown => {
+                            dropdown.classList.remove('active');
+                        });
+                    }
+                });
+            }
+            
+            // Тарифы - показ кнопки на мобильных при нажатии
+            const tariffs = document.querySelectorAll('.tariff');
+            
+            tariffs.forEach(tariff => {
+                if (window.innerWidth <= 768) {
+                    tariff.addEventListener('click', function(e) {
+                        // Если клик был не по кнопке
+                        if (!e.target.classList.contains('tariff-btn') && !e.target.closest('.tariff-btn')) {
+                            const btn = this.querySelector('.tariff-btn');
+                            btn.style.display = btn.style.display === 'inline-block' ? 'none' : 'inline-block';
+                            
+                            // Скрываем кнопки у других тарифов
+                            tariffs.forEach(otherTariff => {
+                                if (otherTariff !== tariff) {
+                                    otherTariff.querySelector('.tariff-btn').style.display = 'none';
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+            
+            // Слайдер отзывов
+            const reviewsSlider = document.getElementById('reviewsSlider');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            let currentSlide = 0;
+            const totalSlides = document.querySelectorAll('.review').length;
+            let autoSlideInterval;
+            
+            function updateSlider() {
+                reviewsSlider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            }
+            
+            function startAutoSlide() {
+                autoSlideInterval = setInterval(() => {
+                    currentSlide = currentSlide < totalSlides - 1 ? currentSlide + 1 : 0;
+                    updateSlider();
+                }, 5000);
+            }
+            
+            function stopAutoSlide() {
+                clearInterval(autoSlideInterval);
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                stopAutoSlide();
+                currentSlide = currentSlide > 0 ? currentSlide - 1 : totalSlides - 1;
+                updateSlider();
+                startAutoSlide();
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                stopAutoSlide();
+                currentSlide = currentSlide < totalSlides - 1 ? currentSlide + 1 : 0;
+                updateSlider();
+                startAutoSlide();
+            });
+            
+            // Запуск автопереключения слайдера
+            startAutoSlide();
+            
+            // Остановка автопереключения при наведении
+            reviewsSlider.addEventListener('mouseenter', stopAutoSlide);
+            reviewsSlider.addEventListener('mouseleave', startAutoSlide);
+            
+            // Отправка формы на Formcarry
+            const contactForm = document.getElementById('contactForm');
+            const formMessage = document.getElementById('formMessage');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // В реальном проекте здесь будет URL от Formcarry
+                const formcarryUrl = 'https://formcarry.com/s/YOUR_FORM_ID';
+                
+                // Собираем данные формы
+                const formData = new FormData(this);
+                
+                // Валидация телефона
+                const phone = document.getElementById('phone').value;
+                const phoneRegex = /^[\+]?[78][\-\(]?\d{3}\)?[\-]?\d{3}[\-]?\d{2}[\-]?\d{2}$/;
+                
+                if (!phoneRegex.test(phone)) {
+                    formMessage.textContent = 'Пожалуйста, введите корректный номер телефона.';
+                    formMessage.className = 'form-message error';
+                    formMessage.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                    return;
+                }
+                
+                // Показать индикатор загрузки
+                const submitBtn = contactForm.querySelector('.submit-btn');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Отправка...';
+                submitBtn.disabled = true;
+                
+                // Имитация отправки (в реальном проекте раскомментируйте fetch)
+                setTimeout(() => {
+                    formMessage.textContent = 'Спасибо! Ваша заявка успешно отправлена. Мы свяжемся с вами в ближайшее время.';
+                    formMessage.className = 'form-message success';
+                    formMessage.style.display = 'block';
+                    contactForm.reset();
+                    
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    
+                    // Скрываем сообщение через 5 секунд
+                    setTimeout(() => {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                }, 1500);
+                
+                // В реальном проекте используйте этот код для отправки на Formcarry:
+                /*
+                fetch(formcarryUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    
+                    if (data.code === 200) {
+                        formMessage.textContent = 'Спасибо! Ваша заявка успешно отправлена.';
+                        formMessage.className = 'form-message success';
+                        formMessage.style.display = 'block';
+                        contactForm.reset();
+                    } else {
+                        formMessage.textContent = 'Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз.';
+                        formMessage.className = 'form-message error';
+                        formMessage.style.display = 'block';
+                    }
+                    
+                    setTimeout(() => {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                })
+                .catch(error => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    
+                    formMessage.textContent = 'Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз.';
+                    formMessage.className = 'form-message error';
+                    formMessage.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                });
+                */
+            });
+            
+            // Плавная прокрутка к якорям
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') return;
+                    
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        // Закрываем мобильное меню, если оно открыто
+                        if (navMenu.classList.contains('active')) {
+                            navMenu.classList.remove('active');
+                            burgerMenu.innerHTML = '<i class="fas fa-bars"></i>';
+                        }
+                        
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Изменение стиля header при прокрутке
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 100) {
+                    header.style.boxShadow = '0 6px 20px rgba(103, 22, 21, 0.25)';
+                } else {
+                    header.style.boxShadow = '0 4px 15px rgba(103, 22, 21, 0.2)';
+                }
+            });
+            
+            // Анимация появления элементов при прокрутке
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.feature, .tariff, .work-item, .review');
+                
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.2;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+            
+            // Устанавливаем начальные стили для анимации
+            document.querySelectorAll('.feature, .tariff, .work-item').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            window.addEventListener('scroll', animateOnScroll);
+            // Вызываем сразу, чтобы показать элементы, которые уже в поле зрения
+            animateOnScroll();
+        });
+    </script>
+</body>
+</html>
